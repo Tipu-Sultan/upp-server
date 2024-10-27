@@ -67,8 +67,9 @@ exports.getCrimeRecords = async (req, res) => {
 };
 
 exports.getFilteredCrimeRecords = async (req, res) => {
-    const { district, tehsil, policeStation } = req.query; // Get the filters from query parameters
+    const { district, tehsil, policeStation } = req.query;
 
+    console.log(district,tehsil, policeStation)
     try {
         const filter = {};
         
@@ -96,6 +97,7 @@ exports.getFilteredCrimeRecords = async (req, res) => {
         res.status(500).json({ error: 'Failed to retrieve crime records' });
     }
 };
+
 
 
 

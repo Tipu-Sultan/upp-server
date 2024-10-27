@@ -8,13 +8,21 @@ exports.registerInspector = async (req, res) => {
     const { policeId, firstName, lastName, email, phone, password } = req.body;
 
     try {
+        // Check if a user with the same policeId, email, or phone already exists
+        const existingUser = await User.findOne({
+            $or: [{ policeId }, { email }, { phone }],
+        });
+
+        if (existingUser) {
+            return res.status(400).json({ error: 'User with this Police ID, email, or phone already exists' });
+        }
+
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Generate verification token
         const verificationToken = crypto.randomBytes(16).toString('hex');
 
-        console.log(verificationToken)
         // Create new user with token
         const newUser = await User.create({
             policeId,
@@ -30,7 +38,7 @@ exports.registerInspector = async (req, res) => {
         // Send verification email
         sendVerificationEmail(email, verificationToken);
 
-        res.status(201).json({ message: 'User registered successfully, please verify your email.',policeId:newUser.policeId });
+        res.status(201).json({ message: 'User registered successfully, please verify your email.', policeId: newUser.policeId });
     } catch (error) {
         res.status(500).json({ error: 'Registration failed' });
     }

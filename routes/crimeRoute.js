@@ -4,7 +4,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 const router = express.Router();
 
 router.post('/register', authMiddleware, registerCrime);
-router.get('/:crimeNumber', authMiddleware, getCrimeRecords);
+router.get('/getbynumber/:crimeNumber', authMiddleware, getCrimeRecords);
 router.get('/', getFilteredCrimeRecords);
 
 
